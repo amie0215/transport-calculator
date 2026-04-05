@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>서울 대학생 교통비 비교기</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#171717;
+      --muted:#62646c;
+      --line:#e7e8ee;
+      --primary:#111827;
+      --primary-2:#2563eb;
+      --good:#ecfdf5;
+      --good-line:#86efac;
+      --sky:#eff6ff;
+      --sky-line:#93c5fd;
+      --shadow:0 10px 30px rgba(17,24,39,.07);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Segoe UI", sans-serif;
+      background: linear-gradient(180deg,#fafbff 0%, #f6f7fb 100%);
+      color:var(--text);
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:28px 18px 48px}
+    .hero{
+      background: linear-gradient(135deg,#fff 0%, #f3f4f6 100%);
+      border:1px solid var(--line);
+      border-radius:32px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:24px;
+    }
+    .pill{
+      display:inline-block;
+      background:#111827;
+      color:white;
+      font-size:12px;
+      font-weight:700;
+      padding:8px 12px;
+      border-radius:999px;
+      letter-spacing:.02em;
+    }
+    h1{
+      font-size:clamp(2rem,4vw,3.5rem);
+      line-height:1.08;
+      margin:14px 0 10px;
+      letter-spacing:-.03em;
+    }
+    .hero p{color:var(--muted);line-height:1.7;margin:0}
+    .notice{
+      margin-top:16px;
+      background:rgba(255,255,255,.9);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:14px 16px;
+      color:#333;
+      line-height:1.65;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:24px;
+      align-items:start;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      margin-bottom:18px;
+    }
+    .card h2,.card h3{margin:0 0 14px}
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+    label{
+      display:block;
+      font-size:14px;
+      font-weight:600;
+      color:#20222a;
+    }
+    .hint{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+      line-height:1.5;
+    }
+    input, select{
+      width:100%;
+      margin-top:8px;
+      border:1px solid #d8dbe5;
+      border-radius:18px;
+      padding:13px 14px;
+      font-size:15px;
+      outline:none;
+      background:#fff;
+    }
+    input:focus, select:focus{
+      border-color:#94a3b8;
+      box-shadow:0 0 0 4px rgba(148,163,184,.15);
+    }
+    .result-hero{
+      background:#111827;
+      color:white;
+      border-radius:28px;
+      padding:22px;
+      box-shadow:var(--shadow);
+    }
+    .subtle{font-size:13px;color:#d1d5db}
+    .winner{
+      font-size:32px;
+      font-weight:800;
+      margin-top:8px;
+      line-height:1.15;
+    }
+    .result-hero p{
+      color:#e5e7eb;
+      line-height:1.7;
+      margin:12px 0 0;
+      font-size:14px;
+    }
+    .saving{
+      margin-top:16px;
+      background:rgba(255,255,255,.1);
+      border-radius:18px;
+      padding:14px 16px;
+    }
+    .saving .amount{
+      font-size:28px;
+      font-weight:800;
+      margin-top:4px;
+    }
+    .mini-cards{display:grid;gap:12px;margin-top:16px}
+    .mini{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+    .mini.best-kpass{background:var(--good);border-color:var(--good-line)}
+    .mini.best-climate{background:var(--sky);border-color:var(--sky-line)}
+    .mini .label{font-size:13px;color:var(--muted)}
+    .mini .price{font-size:30px;font-weight:800;margin-top:6px}
+    .mini .desc{margin-top:8px;color:var(--muted);font-size:12px;line-height:1.55}
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      padding:8px 0;
+      font-size:14px;
+      line-height:1.6;
+    }
+    .row strong{font-size:15px}
+    .divider{height:1px;background:var(--line);margin:8px 0}
+    .warn{
+      background:#fff8e8;
+      border:1px solid #f2d08a;
+      color:#7a5412;
+      line-height:1.7;
+    }
+    .footer{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+    }
+    .small{font-size:12px;color:var(--muted)}
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+    }
+    @media (max-width: 680px){
+      .form-grid{grid-template-columns:1fr}
+      .wrap{padding:16px 14px 28px}
+      .hero,.card{padding:18px}
+      .winner{font-size:28px}
+      .mini .price{font-size:26px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <span class="pill">서울 대학생 교통비 비교기</span>
+      <h1>K-패스 vs 기후동행카드<br>내 이동 패턴에는 뭐가 더 이득일까?</h1>
+      <p>서울 소재 대학에 다니는 대학생을 기준으로, 통학·주말 이동 패턴에 따라 K-패스 청년 할인과 기후동행카드 청년권을 비교하는 계산기예요.</p>
+      <div class="notice">
+        <strong>기본 전제</strong><br>
+        본 사이트는 <strong>K-패스 청년 할인 대상, 서울 소재 대학교에 다니는 학생</strong>을 기준으로 제작되었습니다.
+      </div>
+    </section>
+
+    <div class="grid">
+      <main>
+        <section class="card">
+          <h2>1. 평일 통학 패턴</h2>
+          <div class="form-grid">
+            <label>주 몇 회 통학하나요?
+              <input id="commuteDaysPerWeek" type="number" min="0" max="7" value="4">
+            </label>
+            <label>한 달 환산 주 수
+              <input id="semesterWeeksPerMonth" type="number" min="1" max="5" step="0.1" value="4.3">
+              <div class="hint">보통 4.3주로 두면 무난해요.</div>
+            </label>
+
+            <label>통학 출발 지역
+              <select id="weekdayStart">
+                <option value="서울" selected>서울</option>
+                <option value="경기">경기</option>
+                <option value="인천">인천</option>
+                <option value="기타">기타</option>
+              </select>
+            </label>
+
+            <label>출발지 메모
+              <input id="weekdayStartText" type="text" value="기숙사" placeholder="예: 기숙사, 본가">
+            </label>
+
+            <label>도착지 메모
+              <input id="weekdayDestination" type="text" value="학교" placeholder="예: 학교">
+            </label>
+
+            <label>통학 하루 왕복 교통비
+              <input id="weekdayRoundTripCost" type="number" min="0" step="100" value="3000">
+              <div class="hint">가장 정확한 계산을 위해 직접 입력하는 방식을 사용해요.</div>
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>2. 서울 안 추가 이동</h2>
+          <div class="form-grid">
+            <label>한 달 서울 내부 추가 교통비
+              <input id="extraSeoulTripCost" type="number" min="0" step="100" value="12000">
+              <div class="hint">통학 외 약속, 알바, 동아리 이동 등을 합산해 입력해요.</div>
+            </label>
+
+            <label>따릉이 포함 기후동행카드 사용할래요?
+              <select id="includeBike">
+                <option value="no" selected>아니요</option>
+                <option value="yes">네</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>3. 주말 본가 / 서울 외 이동</h2>
+          <div class="form-grid">
+            <label>한 달에 몇 회 방문하나요?
+              <input id="weekendTripsPerMonth" type="number" min="0" max="31" value="2">
+            </label>
+
+            <label>1회 왕복 교통비
+              <input id="weekendRoundTripCost" type="number" min="0" step="100" value="6000">
+            </label>
+
+            <label>출발 지역
+              <select id="weekendStart">
+                <option value="서울" selected>서울</option>
+                <option value="경기">경기</option>
+                <option value="인천">인천</option>
+                <option value="기타">기타</option>
+              </select>
+            </label>
+
+            <label>출발지 메모
+              <input id="weekendStartText" type="text" value="학교/기숙사 근처" placeholder="예: 학교 근처">
+            </label>
+
+            <label>도착 지역
+              <select id="weekendDestination">
+                <option value="서울">서울</option>
+                <option value="경기" selected>경기</option>
+                <option value="인천">인천</option>
+                <option value="기타">기타</option>
+              </select>
+            </label>
+
+            <label>도착지 메모
+              <input id="weekendDestinationText" type="text" value="본가" placeholder="예: 본가">
+            </label>
+          </div>
+        </section>
+      </main>
+
+      <aside>
+        <section class="result-hero">
+          <div class="subtle">추천 결과</div>
+          <div class="winner" id="bestLabel">-</div>
+          <p id="reasoning">-</p>
+          <div class="saving">
+            <div class="subtle">다음 선택지보다 절약</div>
+            <div class="amount" id="savings">-</div>
+          </div>
+        </section>
+
+        <div class="mini-cards">
+          <section class="mini">
+            <div class="label">일반 결제</div>
+            <div class="price" id="regularCost">-</div>
+          </section>
+
+          <section class="mini" id="kpassCard">
+            <div class="label">K-패스 청년</div>
+            <div class="price" id="kpassCost">-</div>
+            <div class="desc">전체 대중교통비에 청년 환급률 45%를 단순 적용했어요.</div>
+          </section>
+
+          <section class="mini" id="climateCard">
+            <div class="label" id="climateLabel">기후동행카드 청년</div>
+            <div class="price" id="climateCost">-</div>
+            <div class="desc">서울 외부로 잡힌 통학·주말 이동 비용은 기후동행카드 외 추가 지출로 반영했어요.</div>
+          </section>
+        </div>
+
+        <section class="card">
+          <h3>계산 근거</h3>
+          <div class="row"><span>월 통학 교통비</span><strong id="monthlyCommuteCost">-</strong></div>
+          <div class="row"><span>서울 내부 추가 이동</span><strong id="extraCostDisplay">-</strong></div>
+          <div class="row"><span>주말/서울 외 이동</span><strong id="monthlyWeekendCost">-</strong></div>
+          <div class="divider"></div>
+          <div class="row"><span>기후동행 기본권종</span><strong id="climateBasePrice">-</strong></div>
+        </section>
+
+        <section class="card">
+          <h3>입력 해석</h3>
+          <div class="row" style="display:block">
+            <span id="weekdaySummary"></span>
+          </div>
+          <div class="row" style="display:block">
+            <span id="weekendSummary"></span>
+          </div>
+          <div class="row" style="display:block">
+            <span id="weekdayInterpretation"></span>
+          </div>
+          <div class="row" style="display:block">
+            <span id="weekendInterpretation"></span>
+          </div>
+        </section>
+
+        <section class="card warn">
+          <h3>꼭 확인해줘</h3>
+          이 계산기는 빠른 비교를 위한 단순화 버전이에요. 실제 요금은 이용 노선, 환승, 제외 구간, 카드 세부 조건에 따라 달라질 수 있어요.
+        </section>
+
+        <div class="footer">
+          기준값은 현재 공개 안내를 바탕으로 넣어두었어요. K-패스 청년 환급률은 2026년 4월부터 9월까지 한시적으로 45%가 적용되고 있고, 기후동행카드 청년 30일권은 55,000원, 따릉이 포함 청년권은 58,000원이에요.
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const CLIMATE_YOUTH_PRICE = 55000;
+    const CLIMATE_YOUTH_WITH_BIKE = 58000;
+    const K_PASS_YOUTH_REFUND_RATE = 0.45;
+
+    const ids = [
+      "commuteDaysPerWeek","semesterWeeksPerMonth","weekdayRoundTripCost","weekdayStart",
+      "weekdayStartText","weekdayDestination","extraSeoulTripCost","weekendTripsPerMonth",
+      "weekendRoundTripCost","weekendStart","weekendStartText","weekendDestination",
+      "weekendDestinationText","includeBike"
+    ];
+
+    const el = (id) => document.getElementById(id);
+    const won = (v) => `${Math.max(0, Math.round(v)).toLocaleString("ko-KR")}원`;
+
+    function num(id){
+      const v = Number(el(id).value);
+      return Number.isFinite(v) ? v : 0;
+    }
+
+    function text(id){
+      return el(id).value;
+    }
+
+    function calculate(){
+      const commuteDaysPerWeek = num("commuteDaysPerWeek");
+      const semesterWeeksPerMonth = num("semesterWeeksPerMonth");
+      const weekdayRoundTripCost = num("weekdayRoundTripCost");
+      const weekdayStart = text("weekdayStart");
+      const weekdayStartText = text("weekdayStartText") || "출발지";
+      const weekdayDestination = text("weekdayDestination") || "학교";
+      const extraSeoulTripCost = num("extraSeoulTripCost");
+
+      const weekendTripsPerMonth = num("weekendTripsPerMonth");
+      const weekendRoundTripCost = num("weekendRoundTripCost");
+      const weekendStart = text("weekendStart");
+      const weekendStartText = text("weekendStartText") || "출발지";
+      const weekendDestination = text("weekendDestination");
+      const weekendDestinationText = text("weekendDestinationText") || "도착지";
+      const includeBike = text("includeBike") === "yes";
+
+      const monthlyCommuteCost = commuteDaysPerWeek * semesterWeeksPerMonth * weekdayRoundTripCost;
+      const monthlyWeekendCost = weekendTripsPerMonth * weekendRoundTripCost;
+      const monthlyRegularCost = monthlyCommuteCost + extraSeoulTripCost + monthlyWeekendCost;
+
+      const kPassCost = monthlyRegularCost * (1 - K_PASS_YOUTH_REFUND_RATE);
+      const climateBasePrice = includeBike ? CLIMATE_YOUTH_WITH_BIKE : CLIMATE_YOUTH_PRICE;
+
+      const weekdayOutsideSeoul = weekdayStart !== "서울";
+      const weekendOutsideSeoul = weekendStart !== "서울" || weekendDestination !== "서울";
+
+      const climateExtraCommuteCost = weekdayOutsideSeoul ? monthlyCommuteCost : 0;
+      const climateExtraWeekendCost = weekendOutsideSeoul ? monthlyWeekendCost : 0;
+      const climateCost = climateBasePrice + climateExtraCommuteCost + climateExtraWeekendCost;
+
+      const options = [
+        { key: "regular", label: "일반 결제", cost: monthlyRegularCost },
+        { key: "kpass", label: "K-패스 청년", cost: kPassCost },
+        { key: "climate", label: includeBike ? "기후동행카드 청년(따릉이 포함)" : "기후동행카드 청년", cost: climateCost }
+      ].sort((a,b)=>a.cost-b.cost);
+
+      const best = options[0];
+      const second = options[1];
+      let reasoning = "서울 안 이동이 많을수록 기후동행카드가, 서울 밖 이동 비중이 높을수록 K-패스가 유리해질 가능성이 커요.";
+
+      if (best.key === "kpass") {
+        reasoning = "서울 밖 이동 비용까지 환급 대상에 포함된다는 가정 덕분에 K-패스가 더 유리하게 나왔어요. 특히 주말 본가 이동이나 서울 외 출발 통학이 있을수록 K-패스 쪽으로 기울 수 있어요.";
+      } else if (best.key === "climate") {
+        reasoning = "평일 통학과 서울 내부 이동 비중이 커서 정액형인 기후동행카드가 더 유리하게 나왔어요. 서울 밖 이동이 적다면 기후동행카드 효율이 빠르게 올라가요.";
+      } else {
+        reasoning = "현재 이동량이 많지 않아서 정액권이나 환급형의 장점을 충분히 쓰지 못하는 패턴이에요. 이런 경우에는 일반 결제가 더 가볍게 느껴질 수 있어요.";
+      }
+
+      el("bestLabel").textContent = best.label;
+      el("reasoning").textContent = reasoning;
+      el("savings").textContent = won(second.cost - best.cost);
+
+      el("regularCost").textContent = won(monthlyRegularCost);
+      el("kpassCost").textContent = won(kPassCost);
+      el("climateCost").textContent = won(climateCost);
+      el("climateLabel").textContent = includeBike ? "기후동행카드 청년(따릉이 포함)" : "기후동행카드 청년";
+
+      el("monthlyCommuteCost").textContent = won(monthlyCommuteCost);
+      el("extraCostDisplay").textContent = won(extraSeoulTripCost);
+      el("monthlyWeekendCost").textContent = won(monthlyWeekendCost);
+      el("climateBasePrice").textContent = won(climateBasePrice);
+
+      el("weekdaySummary").textContent = `평일 통학: ${weekdayStartText} (${weekdayStart}) → ${weekdayDestination}`;
+      el("weekendSummary").textContent = `주말 이동: ${weekendStartText} (${weekendStart}) → ${weekendDestinationText} (${weekendDestination})`;
+      el("weekdayInterpretation").textContent = weekdayOutsideSeoul
+        ? "평일 출발지가 서울 외부라 기후동행만으로는 통학 전체를 커버하기 어렵다고 보고 계산했어요."
+        : "평일 출발지가 서울이라 기후동행 정액 혜택을 온전히 활용 가능한 통학으로 계산했어요.";
+      el("weekendInterpretation").textContent = weekendOutsideSeoul
+        ? "주말 이동은 서울 외부 이동이 포함되어 추가 비용이 발생하는 패턴으로 계산했어요."
+        : "주말 이동은 서울 내부 이동으로 보고 기후동행 범위 내 이동으로 계산했어요.";
+
+      el("kpassCard").className = "mini" + (best.key === "kpass" ? " best-kpass" : "");
+      el("climateCard").className = "mini" + (best.key === "climate" ? " best-climate" : "");
+    }
+
+    ids.forEach(id => el(id).addEventListener("input", calculate));
+    ids.forEach(id => el(id).addEventListener("change", calculate));
+    calculate();
+  </script>
+</body>
+</html>
